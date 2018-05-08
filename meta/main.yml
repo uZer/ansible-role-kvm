@@ -1,6 +1,6 @@
 galaxy_info:
   author: Youenn Piolet
-  description: kvm
+  description: Install kvm on archlinux
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value

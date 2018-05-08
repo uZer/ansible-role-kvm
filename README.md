@@ -13,7 +13,7 @@ In playbook:
 
 Include in `requirements.yml`:
 
-    - src: https://github.com/uZer/kvm.git
+    - src: https://github.com/uZer/ansible-role-kvm.git
       name: uZer.kvm
       version: latest
 
