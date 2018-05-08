@@ -1,0 +1,18 @@
+---
+## INCLUDE VARS
+- name: Load a variable file based on the OS type, or a default if not found.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - default.yml
+
+## INCLUDE TAKS
+- name: Install kvm on system
+  include_tasks: "{{ task }}"
+  with_first_found:
+    - "install_{{ ansible_distribution }}.yml"
+    - "install_{{ ansible_os_family }}.yml"
+    - "install_generic.yml"
+  loop_control:
+    loop_var: task

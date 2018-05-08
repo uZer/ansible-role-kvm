@@ -1,0 +1,14 @@
+---
+kvm_requirements:
+  - dmidecode
+  - qemu
+  - virt-manager
+  - dnsmasq
+  - iptables
+  - vde2
+  - bridge-utils
+  - openbsd-netcat
+  - ebtables
+
+kvm_bridge_physical_interfaces:
+  - eno1

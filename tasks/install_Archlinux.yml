@@ -1,0 +1,67 @@
+---
+## INSTALL
+- name: ARCHLINUX .. Install pacman dependencies
+  when: ansible_os_family == "Archlinux"
+  become: yes
+  pacman:
+    name: "{{ kvm_requirements | join(',') }}"
+    state: present
+
+- name: ARCHLINUX .. Enable libvirtd
+  when: ansible_os_family == "Archlinux"
+  become: yes
+  systemd:
+    name: libvirtd
+    state: started
+    enabled: yes
+
+- name: ARCHLINUX .. Enable nested virtualization
+  when: ansible_os_family == "Archlinux" and kvm_enable_nestedvirt
+  become: yes
+  modprobe:
+    name: kvm_intel
+    params: 'nested=1'
+
+- name: ARCHLINUX .. Enable nested virtualization permanently
+  when: ansible_os_family == "Archlinux" and kvm_enable_nestedvirt
+  become: yes
+  lineinfile:
+    line: 'options kvm-intel nested=1'
+    regexp: 'options kvm-intel nested=1'
+    dest: '/etc/modprobe.d/kvm-intel.conf'
+    create: yes
+
+- name: ARCHLINUX .. Create network bridge
+  when: ansible_os_family == "Archlinux"
+  become: yes
+  template:
+    src: bridge.j2
+    dest: /etc/netctl/bridge
+    backup: yes
+
+- name: ARCHLINUX .. Stop passing network trafic to iptables when using bridge
+  when: ansible_os_family == "Archlinux"
+  become: yes
+  sysctl:
+    name: "{{ item }}"
+    value: 0
+    sysctl_set: yes
+    state: present
+    reload: yes
+  with_items:
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-arptables
+
+- name: ARCHLINUX .. Enable ipv4 forwarding
+  when: ansible_os_family == "Archlinux"
+  become: yes
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  with_items:
+    - net.ipv4.ip_forward
+

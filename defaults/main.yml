@@ -1,0 +1,8 @@
+---
+# Default variables for {{ role_name }}
+kvm_requirements: []
+kvm_enable_nestedvirt: yes
+kvm_bridge_physical_interfaces:
+  - eno1
+kvm_bridge_interface: br0
+

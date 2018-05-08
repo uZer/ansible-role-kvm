@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+Description="Bridge {{ kvm_bridge_physical_interfaces | join('-') }}"
+Interface={{ kvm_bridge_interface }}
+Connection=bridge
+BindsToInterfaces=({{ kvm_bridge_physical_interfaces | join(' ') }})
+IP=dhcp
+# Ignore (R)STP and immediately activate the bridge
+SkipForwardingDelay=yes
+MACAddressOf={{ kvm_bridge_physical_interfaces[0] }}
+
+
+## ExecUpPost="ip link set dev {{ kvm_bridge_interface }} address $(cat /sys/class/net/{{ kvm_bridge_physical_interfaces[0] }}/address); IP=dhcp; ip_set"
+## ExecDownPre="IP=dhcp"
